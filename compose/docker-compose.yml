@@ -1,0 +1,32 @@
+version: "3"
+services:
+  discovery:
+    image: nowgnas/bb:discovery
+    container_name: discovery-service
+    ports:
+      - 8761:8761
+    environment:
+      USE_PROFILE: dev
+    networks:
+      - bb_network
+
+  config:
+    image: nowgnas/bb:config
+    container_name: config-service
+    ports:
+      - 8888:8888
+    environment:
+      - GITHUB_USERNAME=${GITHUB_USERNAME}
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+      - ENCRYPT_SECRET_KEY=${ENCRYPT_SECRET_KEY}
+      - USE_PROFILE=${USE_PROFILE}
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092  # Set the Kafka broker address
+    depends_on:
+      - discovery
+      - kafka
+    networks:
+      - bb_network
+
+networks:
+  bb_network:
+    driver: bridge
