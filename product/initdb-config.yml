@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-initdb-config
+data:
+  initdb.sql: |
+    use product-service
+    create table if not exists category
+    (
+    category_id   bigint auto_increment
+    primary key,
+    created_at    datetime(6)  null,
+    is_deleted    bit          null,
+    updated_at    datetime(6)  null,
+    category_name varchar(255) null
+    );
+    
+    create table if not exists flower
+    (
+    flower_id          bigint auto_increment
+    primary key,
+    created_at         datetime(6)  null,
+    is_deleted         bit          null,
+    updated_at         datetime(6)  null,
+    flower_name        varchar(255) null,
+    language_of_flower varchar(255) null
+    );
+    
+    create table if not exists review
+    (
+    review_id      bigint auto_increment
+    primary key,
+    created_at     datetime(6)  null,
+    is_deleted     bit          null,
+    updated_at     datetime(6)  null,
+    product_id     varchar(255) null,
+    review_content varchar(255) null,
+    review_rating  double       null,
+    user_id        bigint       null
+    );
+    
+    create table if not exists review_images
+    (
+    review_images_id bigint auto_increment
+    primary key,
+    created_at       datetime(6)  null,
+    is_deleted       bit          null,
+    updated_at       datetime(6)  null,
+    review_image_url varchar(255) null,
+    review_id        bigint       null,
+    constraint FKn6ocagcwsaswdoh2ntvrkk5en
+    foreign key (review_id) references review (review_id)
+    );
+    
+    create table if not exists sales_resume
+    (
+    sales_resume_id     bigint auto_increment
+    primary key,
+    created_at          datetime(6) null,
+    is_deleted          bit         null,
+    updated_at          datetime(6) null,
+    product_id          bigint      null,
+    sales_resume_status bit         null,
+    user_id             bigint      null
+    );
+    
+    create table if not exists tag
+    (
+    tag_id     bigint auto_increment
+    primary key,
+    created_at datetime(6)  null,
+    is_deleted bit          null,
+    updated_at datetime(6)  null,
+    tag_name   varchar(255) null
+    );
+    
+    INSERT INTO category (category_name)
+    VALUES ('꽃다발'),
+           ('꽃바구니'),
+           ('꽃상자'),
+           ('화분'),
+           ('정기 구독'),
+           ('이벤트');
+    INSERT INTO tag (tag_name)
+    VALUES ('연인 선물'),
+           ('친구 선물'),
+           ('공기 정화'), 
+           ('개업 축하'), 
+           ('승진 취임'), 
+           ('결혼식'), 
+           ('장례식'); 

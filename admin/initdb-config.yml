@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-initdb-config
+data:
+  initdb.sql: |

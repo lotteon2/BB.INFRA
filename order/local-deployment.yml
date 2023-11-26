@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  labels:
+    app: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      name: order-service
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: nowgnas/bb:order
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8900
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always

@@ -14,13 +14,13 @@ wait_for_service() {
   done
 }
 
-#kubectl apply -f kafka/zookeeper-pod-local.yaml
-#kubectl apply -f kafka/zookeeper-service-local.yaml
-#wait_for_service "zookeeper"
-#
-#kubectl apply -f kafka/kafka-pod-local.yaml
-#kubectl apply -f kafka/kafka-service-local.yaml
-#wait_for_service "kafka"
+kubectl apply -f kafka/zookeeper-pod-local.yaml
+kubectl apply -f kafka/zookeeper-service-local.yaml
+wait_for_service "zookeeper"
+
+kubectl apply -f kafka/kafka-pod-local.yaml
+kubectl apply -f kafka/kafka-service-local.yaml
+wait_for_service "kafka"
 
 kubectl apply -f discovery/local-deployment.yaml
 kubectl apply -f discovery/service-local.yaml

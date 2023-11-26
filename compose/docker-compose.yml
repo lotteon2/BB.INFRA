@@ -55,7 +55,26 @@ services:
       - zookeeper
     networks:
       - bb_network
-
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+    networks:
+      - bb_network
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: product
+    networks:
+      - bb_network
 networks:
   bb_network:
     driver: bridge

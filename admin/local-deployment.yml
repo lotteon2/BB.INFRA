@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-service
+  labels:
+    app: admin-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-service
+  template:
+    metadata:
+      name: admin-service
+      labels:
+        app: admin-service
+    spec:
+      containers:
+        - name: admin-service
+          image: nowgnas/bb:admin
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8200
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always

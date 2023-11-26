@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  labels:
+    app: payment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      name: payment-service
+      labels:
+        app: payment-service
+    spec:
+      containers:
+        - name: payment-service
+          image: nowgnas/bb:payment
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8100
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always

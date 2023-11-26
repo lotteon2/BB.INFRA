@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-service
+  labels:
+    app: delivery-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-service
+  template:
+    metadata:
+      name: delivery-service
+      labels:
+        app: delivery-service
+    spec:
+      containers:
+        - name: delivery-service
+          image: nowgnas/bb:delivery
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8300
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always
