@@ -57,22 +57,24 @@ services:
       - bb_network
   mongodb:
     image: mongo
+    volumes:
+      - ./data:/data
     container_name: mongodb
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 1234
     networks:
       - bb_network
   mysql:
     image: mysql
+    volumes:
+      - ./query/bb/conf.d/:/etc/mysql/conf.d/
+      - ./query/bb/initdb.d/:/docker-entrypoint-initdb.d/
     container_name: mysql
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: product
+      MYSQL_DATABASE: develop
     networks:
       - bb_network
 networks:

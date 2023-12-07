@@ -1,0 +1,23 @@
+version: "3"
+services:
+  product:
+    platform: linux/amd64
+    image: nowgnas/bb:product
+    container_name: product-service
+    ports:
+      - 8800:8800
+    environment:
+      - USE_PROFILE=dev
+      - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+    networks:
+      - bb_network
+
+
+networks:
+  bb_network:
+    driver: bridge
