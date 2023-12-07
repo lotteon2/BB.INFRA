@@ -114,6 +114,21 @@ services:
       - config
     networks:
       - bb_network
+  apigateway:
+    platform: linux/amd64
+    image: nowgnas/bb:apigateway
+    container_name: apigateway-service
+    ports:
+      - 8000:8000
+    environment:
+      - USE_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+    networks:
+      - bb_network
 
 volumes:
   data: { }
