@@ -1,3 +1,4 @@
 *.env
 config/config-local.yaml
 mongodb
+redis

@@ -71,3 +71,24 @@ create table if not exists tag
     tag_name   varchar(255) null
 );
 
+create table if not exists notification
+(
+    notification_id      bigint auto_increment
+        primary key,
+    notification_content varchar(255) null,
+    notification_link    varchar(255) null
+);
+
+create table if not exists member_notification
+(
+    member_notification_id bigint auto_increment
+        primary key,
+    created_at             datetime(6) null,
+    is_deleted             bit         null,
+    updated_at             datetime(6) null,
+    is_read                bit         null,
+    user_id                bigint      null,
+    notification_id        bigint      null,
+    constraint FKd59lsqqgsrspgt54x09f113l0
+        foreign key (notification_id) references notification (notification_id)
+);

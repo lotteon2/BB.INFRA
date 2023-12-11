@@ -31,7 +31,7 @@ services:
       - discovery
     networks:
       - bb_network
-    command: ["./wait-for-discovery.sh"]
+    command: sh -c "sleep 20 && echo 'Waiting for Discovery to start' && sleep 10 && echo 'Config service running' && sleep infinity"
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -83,78 +83,7 @@ services:
       MYSQL_DATABASE: develop
     networks:
       - bb_network
-  redis:
-    image: "redis:latest"
-    container_name: "redis"
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./redis:/data
-    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "123456" ]
-  #  product:
-  #    platform: linux/amd64
-  #    image: nowgnas/bb:product
-  #    container_name: product-service
-  #    ports:
-  #      - 8800:8800
-  #    environment:
-  #      - USE_PROFILE=dev
-  #      - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
-  #    depends_on:
-  #      - zookeeper
-  #      - kafka
-  #      - discovery
-  #      - config
-  #    networks:
-  #      - bb_network
-  #  store:
-  #    platform: linux/amd64
-  #    image: nowgnas/bb:store
-  #    container_name: store-service
-  #    ports:
-  #      - 8700:8700
-  #    environment:
-  #      - USE_PROFILE=dev
-  #    depends_on:
-  #      - zookeeper
-  #      - kafka
-  #      - discovery
-  #      - config
-  #    networks:
-  #      - bb_network
-  apigateway:
-    platform: linux/amd64
-    image: nowgnas/bb:apigateway
-    container_name: apigateway-service
-    ports:
-      - 8000:8000
-    environment:
-      - USE_PROFILE=dev
-    depends_on:
-      - zookeeper
-      - kafka
-      - discovery
-      - config
-    networks:
-      - bb_network
-    command: ["./wait-for-config.sh"]
-  auth:
-    platform: linux/amd64
-    image: nowgnas/bb:auth
-    container_name: auth-service
-    ports:
-      - 9000:9000
-    environment:
-      - USE_PROFILE=dev
-    depends_on:
-      - zookeeper
-      - kafka
-      - discovery
-      - config
-      - apigateway
-    networks:
-      - bb_network
-    command: ["./wait-for-config.sh"]
+
 volumes:
   data: { }
 
