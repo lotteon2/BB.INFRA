@@ -1,0 +1,1 @@
+docker-compose --env-file compose/.env -f compose/auth-docker-compose-dev.yml down

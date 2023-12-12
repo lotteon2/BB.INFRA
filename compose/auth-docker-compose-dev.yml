@@ -1,16 +1,21 @@
 version: "3"
 services:
   discovery:
+    platform: linux/amd64
     image: nowgnas/bb:discovery
     container_name: discovery-service
     ports:
       - 8761:8761
     environment:
       USE_PROFILE: dev
+    depends_on:
+      - zookeeper
+      - kafka
     networks:
       - bb_network
 
   config:
+    platform: linux/amd64
     image: nowgnas/bb:config
     container_name: config-service
     ports:
@@ -19,13 +24,14 @@ services:
       - GITHUB_USERNAME=${GITHUB_USERNAME}
       - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
       - ENCRYPT_SECRET_KEY=${ENCRYPT_SECRET_KEY}
-      - USE_PROFILE=${USE_PROFILE}
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092  # Set the Kafka broker address
+      - USE_PROFILE=dev
     depends_on:
-      - discovery
+      - zookeeper
       - kafka
+      - discovery
     networks:
       - bb_network
+    command: ["./wait-for-discovery.sh"]
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -48,7 +54,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_BOOTSTRAP_SERVERS=kafka: 9092
+      KAFKA_CREATE_TOPICS: "config-topic:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -57,11 +63,11 @@ services:
       - bb_network
   mongodb:
     image: mongo
-    volumes:
-      - ./data:/data
     container_name: mongodb
     ports:
-      - "27017:27017"
+      - 27017:27017
+    volumes:
+      - ./mongodb:/data/db
     networks:
       - bb_network
   mysql:
@@ -73,10 +79,54 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: develop
     networks:
       - bb_network
+  redis:
+    image: "redis:latest"
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/data
+    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "123456" ]
+  apigateway:
+    platform: linux/amd64
+    image: nowgnas/bb:apigateway
+    container_name: apigateway-service
+    ports:
+      - 8000:8000
+    environment:
+      - USE_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+    networks:
+      - bb_network
+    command: ["./wait-for-config.sh"]
+  auth:
+    platform: linux/amd64
+    image: nowgnas/bb:auth
+    container_name: auth-service
+    ports:
+      - 9000:9000
+    environment:
+      - USE_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+      - apigateway
+    networks:
+      - bb_network
+    command: ["./wait-for-config.sh"]
+volumes:
+  data: { }
+
 networks:
   bb_network:
     driver: bridge
