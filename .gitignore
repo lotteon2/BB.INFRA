@@ -1,5 +1,5 @@
 *.env
-config/config-local.yaml
+config-local.yaml
 mongodb
 redis
 # Created by https://www.toptal.com/developers/gitignore/api/terraform

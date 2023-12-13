@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-service
+  labels:
+    app: apigateway-service
+    profile: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway-service
+  template:
+    metadata:
+      name: apigateway-service
+      labels:
+        app: apigateway-service
+        profile: dev
+    spec:
+      containers:
+        - name: apigateway-service
+          image: nowgnas/bb:apigateway
+          imagePullPolicy: Always
+      restartPolicy: OnFailure
+

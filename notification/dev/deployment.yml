@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  labels:
+    app: notification-service
+    profile: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      name: notification-service
+      labels:
+        app: notification-service
+        profile: dev
+    spec:
+      containers:
+        - name: notification-service
+          image: nowgnas/bb:notification
+          imagePullPolicy: Always
+      restartPolicy: OnFailure
+

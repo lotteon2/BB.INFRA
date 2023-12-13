@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-service
+  labels:
+    app: store-service
+    profile: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store-service
+  template:
+    metadata:
+      name: store-service
+      labels:
+        app: store-service
+        profile: dev
+    spec:
+      containers:
+        - name: store-service
+          image: nowgnas/bb:store
+          imagePullPolicy: Always
+      restartPolicy: OnFailure
+

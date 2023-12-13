@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-service
+  labels:
+    app: delivery-service
+    profile: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-service
+  template:
+    metadata:
+      name: delivery-service
+      labels:
+        app: delivery-service
+        profile: dev
+    spec:
+      containers:
+        - name: delivery-service
+          image: nowgnas/bb:delivery
+          imagePullPolicy: Always
+      restartPolicy: OnFailure
+

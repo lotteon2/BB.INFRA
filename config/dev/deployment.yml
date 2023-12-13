@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service
+  labels:
+    app: config-service
+    profile: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-service
+  template:
+    metadata:
+      name: config-service
+      labels:
+        app: config-service
+        profile: dev
+    spec:
+      containers:
+        - name: config-service
+          image: nowgnas/bb:config
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: config-env
+      restartPolicy: Always
+

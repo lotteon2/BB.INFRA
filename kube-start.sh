@@ -29,21 +29,21 @@ wait_for_service() {
   done
 }
 
-kubectl apply -f kafka/local-zookeeper-deployment.yaml
-kubectl apply -f kafka/zookeeper-service-local.yaml
+kubectl apply -f zookeeper/dev/deployment.yml
+kubectl apply -f zookeeper/dev/service.yml
 wait_for_service "zookeeper"
 
-kubectl apply -f kafka/local-kafka-deployment.yaml
-kubectl apply -f kafka/kafka-service-local.yaml
+kubectl apply -f kafka/dev/deployment.yml
+kubectl apply -f kafka/dev/service.yml
 wait_for_service "kafka"
 
-kubectl apply -f discovery/local-deployment.yaml
-kubectl apply -f discovery/service-local.yaml
+kubectl apply -f discovery/dev/deployment.yml
+kubectl apply -f discovery/dev/service.yml
 wait_for_service "discovery"
 
-kubectl apply -f config/config-local.yaml
-kubectl apply -f config/local-deployment.yaml
-kubectl apply -f config/service-local.yaml
+kubectl apply -f config/dev/config-local.yaml
+kubectl apply -f config/dev/deployment.yml
+kubectl apply -f config/dev/service.yml
 wait_for_service "config"
 
 
@@ -73,8 +73,8 @@ while true; do
             echo "$selected_service service running start"
             # Add your code for the selected service here
 
-            kubectl apply -f $selected_service/local-deployment.yml
-            kubectl apply -f $selected_service/service-local.yml
+            kubectl apply -f $selected_service/dev/deployment.yml
+            kubectl apply -f $selected_service/dev/service.yml
             wait_for_service $selected_service
 
             # Update the available services for the next iteration
