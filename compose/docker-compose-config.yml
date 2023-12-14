@@ -83,7 +83,21 @@ services:
       MYSQL_DATABASE: develop
     networks:
       - bb_network
-
+  store:
+    platform: linux/amd64
+    image: nowgnas/bb:store
+    container_name: store-service
+    ports:
+      - 8700:8700
+    environment:
+      - USE_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+    networks:
+      - bb_network
 volumes:
   data: { }
 
