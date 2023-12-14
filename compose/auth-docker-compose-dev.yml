@@ -149,6 +149,7 @@ services:
       - 8800:8800
     environment:
       - USE_PROFILE=dev
+      - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
     depends_on:
       - zookeeper
       - kafka
