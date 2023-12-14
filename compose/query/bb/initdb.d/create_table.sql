@@ -92,3 +92,24 @@ create table if not exists member_notification
     constraint FKd59lsqqgsrspgt54x09f113l0
         foreign key (notification_id) references notification (notification_id)
 );
+
+create table social_user
+(
+    id            bigint       not null
+        primary key,
+    email         varchar(255) null,
+    is_deleted    bit          null,
+    nickname      varchar(255) null,
+    oauth_id      bigint       null,
+    phone_number  varchar(255) null,
+    profile_image varchar(255) DEFAULT 'https://ibb.co/BN1YNzw' null
+);
+
+create table store_manager
+(
+    id                    bigint       not null
+        primary key,
+    business_number_image varchar(255) null,
+    email                 varchar(255) null,
+    name                  varchar(255) null
+);
