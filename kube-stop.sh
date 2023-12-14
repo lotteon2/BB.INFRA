@@ -10,7 +10,8 @@ for ((i=0; i<${#services[@]}; i++)); do
 
 done
 
-  kubectl delete service kafka
-  kubectl delete service zookeeper
-  kubectl delete deployment kafka
-  kubectl delete deployment zookeeper
+kubectl delete service kafka
+kubectl delete deployment kafka
+
+kubectl delete service zookeeper
+kubectl delete deployment zookeeper

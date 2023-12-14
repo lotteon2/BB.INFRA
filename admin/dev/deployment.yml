@@ -4,7 +4,6 @@ metadata:
   name: admin-service
   labels:
     app: admin-service
-    profile: dev
 spec:
   replicas: 1
   selector:
@@ -15,11 +14,14 @@ spec:
       name: admin-service
       labels:
         app: admin-service
-        profile: dev
     spec:
       containers:
         - name: admin-service
           image: nowgnas/bb:admin
-          imagePullPolicy: Always
-      restartPolicy: OnFailure
-
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8200
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always

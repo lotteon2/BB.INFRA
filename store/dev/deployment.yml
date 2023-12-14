@@ -4,7 +4,6 @@ metadata:
   name: store-service
   labels:
     app: store-service
-    profile: dev
 spec:
   replicas: 1
   selector:
@@ -15,11 +14,14 @@ spec:
       name: store-service
       labels:
         app: store-service
-        profile: dev
     spec:
       containers:
         - name: store-service
           image: nowgnas/bb:store
-          imagePullPolicy: Always
-      restartPolicy: OnFailure
-
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8700
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always

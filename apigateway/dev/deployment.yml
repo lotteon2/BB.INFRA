@@ -4,7 +4,6 @@ metadata:
   name: apigateway-service
   labels:
     app: apigateway-service
-    profile: dev
 spec:
   replicas: 1
   selector:
@@ -15,11 +14,14 @@ spec:
       name: apigateway-service
       labels:
         app: apigateway-service
-        profile: dev
     spec:
       containers:
         - name: apigateway-service
           image: nowgnas/bb:apigateway
-          imagePullPolicy: Always
-      restartPolicy: OnFailure
-
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always

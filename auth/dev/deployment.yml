@@ -4,7 +4,6 @@ metadata:
   name: auth-service
   labels:
     app: auth-service
-    profile: dev
 spec:
   replicas: 1
   selector:
@@ -15,11 +14,14 @@ spec:
       name: auth-service
       labels:
         app: auth-service
-        profile: dev
     spec:
       containers:
         - name: auth-service
           image: nowgnas/bb:auth
-          imagePullPolicy: Always
-      restartPolicy: OnFailure
-
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - name: USE_PROFILE
+              value: "dev"
+      restartPolicy: Always

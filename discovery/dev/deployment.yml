@@ -4,7 +4,6 @@ metadata:
   name: discovery-service
   labels:
     app: discovery-service
-    profile: dev
 spec:
   replicas: 1
   selector:
@@ -15,10 +14,14 @@ spec:
       name: discovery-service
       labels:
         app: discovery-service
-        profile: dev
     spec:
       containers:
         - name: discovery-service
           image: nowgnas/bb:discovery
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8761
+          env:
+            - name: USE_PROFILE
+              value: "dev"
       restartPolicy: Always

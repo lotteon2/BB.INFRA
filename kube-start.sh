@@ -17,25 +17,48 @@ declare -A services=(
 
 wait_for_service() {
   local service_name="$1"
-  while true; do
+  local health_check_path="/actuator/health"  # Adjust this path based on your service's health check endpoint
+  local max_retries=30
+  local retry_count=0
+
+  while [[ "$retry_count" -lt "$max_retries" ]]; do
     local endpoints=$(kubectl get endpoints "$service_name" -o jsonpath='{.subsets[*].addresses[*].ip}' 2>&1)
+
     if [[ -n "$endpoints" ]]; then
-      echo "Service $service_name is running."
-      break
+      # Service has endpoints; now check the health status
+      local health_status=$(curl -s "http://$endpoints$health_check_path" | jq -r '.status')  # Assuming you have jq installed for JSON parsing
+
+      if [[ "$health_status" == "UP" ]]; then
+        echo "Service $service_name is running and healthy."
+        break
+      else
+        echo "Service $service_name is running, but health check failed. Retrying in 5 seconds..."
+        sleep 5
+      fi
     else
       echo "Waiting for $service_name to have active endpoints..."
       sleep 5
     fi
+
+    ((retry_count++))
   done
+
+  if [[ "$retry_count" -ge "$max_retries" ]]; then
+    echo "Timed out waiting for $service_name to be ready."
+    exit 1  # or handle the timeout as needed
+  fi
 }
+
 
 kubectl apply -f zookeeper/dev/deployment.yml
 kubectl apply -f zookeeper/dev/service.yml
-wait_for_service "zookeeper"
+
+sleep 10
 
 kubectl apply -f kafka/dev/deployment.yml
 kubectl apply -f kafka/dev/service.yml
-wait_for_service "kafka"
+
+sleep 10
 
 kubectl apply -f discovery/dev/deployment.yml
 kubectl apply -f discovery/dev/service.yml
