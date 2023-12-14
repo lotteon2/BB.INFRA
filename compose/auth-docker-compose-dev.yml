@@ -157,6 +157,7 @@ services:
       - config
     networks:
       - bb_network
+    command: ["./wait-for-config.sh"]
   store:
     platform: linux/amd64
     image: nowgnas/bb:store
@@ -172,6 +173,7 @@ services:
       - config
     networks:
       - bb_network
+    command: ["./wait-for-config.sh"]
 volumes:
   data: { }
 
