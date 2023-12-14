@@ -2,8 +2,8 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-resource "aws_sqs_queue" "delivery-start-notification-queue" {
-  name                      = "delivery-start-notification-queue"
+resource "aws_sqs_queue" "delivery-status-update-notification-queue" {
+  name                      = "delivery-status-update-notification-queue"
   delay_seconds             = 0
   max_message_size          = 262144
   message_retention_seconds = 345600 # 4 days
@@ -16,5 +16,5 @@ resource "aws_sqs_queue" "delivery-start-notification-queue" {
 }
 
 resource "aws_sqs_queue" "dead_letter_queue" {
-  name = "delivery-start-notification-queue-dead-letter-queue"
+  name = "delivery-status-update-notification-queue-dead-letter-queue"
 }
