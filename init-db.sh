@@ -6,7 +6,7 @@ for ((i=0; i<${#services[@]}; i++)); do
 service=${services[i]}
 service_port=${port[i]}
 
-  cat <<EOL > "$service/initdb-config.yml"
+  cat <<EOL > "$service/dev/initdb-config.yml"
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -15,5 +15,5 @@ data:
   initdb.sql: |
 EOL
 
-  echo "Created $service/service-local.yml"
+  echo "Created $service/dev/init-db.yml"
 done

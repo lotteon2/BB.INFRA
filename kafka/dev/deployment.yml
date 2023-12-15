@@ -28,4 +28,14 @@ spec:
               value: kafka
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: zookeeper:2181
-      restartPolicy: Always
+          readinessProbe:
+            tcpSocket:
+              port: 9093
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          # 애플리케이션이 정상 상태를 유지하고 있는지 지속해서 검사
+          livenessProbe:
+            tcpSocket:
+              port: 9093
+            initialDelaySeconds: 30
+            periodSeconds: 20

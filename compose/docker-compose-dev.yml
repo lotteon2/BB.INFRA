@@ -91,22 +91,22 @@ services:
     volumes:
       - ./redis:/data
     command: [ "redis-server", "--appendonly", "yes", "--requirepass", "123456" ]
-    product:
-      platform: linux/amd64
-      image: nowgnas/bb:product
-      container_name: product-service
-      ports:
-        - 8800:8800
-      environment:
-        - USE_PROFILE=dev
-        - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
-      depends_on:
-        - zookeeper
-        - kafka
-        - discovery
-        - config
-      networks:
-        - bb_network
+#    product:
+#      platform: linux/amd64
+#      image: nowgnas/bb:product
+#      container_name: product-service
+#      ports:
+#        - 8800:8800
+#      environment:
+#        - USE_PROFILE=dev
+#        - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
+#      depends_on:
+#        - zookeeper
+#        - kafka
+#        - discovery
+#        - config
+#      networks:
+#        - bb_network
   #  store:
   #    platform: linux/amd64
   #    image: nowgnas/bb:store
@@ -122,39 +122,39 @@ services:
   #      - config
   #    networks:
   #      - bb_network
-  apigateway:
-    platform: linux/amd64
-    image: nowgnas/bb:apigateway
-    container_name: apigateway-service
-    ports:
-      - 8000:8000
-    environment:
-      - USE_PROFILE=dev
-    depends_on:
-      - zookeeper
-      - kafka
-      - discovery
-      - config
-    networks:
-      - bb_network
-    command: ["./wait-for-config.sh"]
-  auth:
-    platform: linux/amd64
-    image: nowgnas/bb:auth
-    container_name: auth-service
-    ports:
-      - 9000:9000
-    environment:
-      - USE_PROFILE=dev
-    depends_on:
-      - zookeeper
-      - kafka
-      - discovery
-      - config
-      - apigateway
-    networks:
-      - bb_network
-    command: ["./wait-for-config.sh"]
+#  apigateway:
+#    platform: linux/amd64
+#    image: nowgnas/bb:apigateway
+#    container_name: apigateway-service
+#    ports:
+#      - 8000:8000
+#    environment:
+#      - USE_PROFILE=dev
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#      - discovery
+#      - config
+#    networks:
+#      - bb_network
+#    command: ["./wait-for-config.sh"]
+#  auth:
+#    platform: linux/amd64
+#    image: nowgnas/bb:auth
+#    container_name: auth-service
+#    ports:
+#      - 9000:9000
+#    environment:
+#      - USE_PROFILE=dev
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#      - discovery
+#      - config
+#      - apigateway
+#    networks:
+#      - bb_network
+#    command: ["./wait-for-config.sh"]
 volumes:
   data: { }
 

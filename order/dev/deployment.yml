@@ -18,10 +18,35 @@ spec:
       containers:
         - name: order-service
           image: nowgnas/bb:order
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8900
           env:
             - name: USE_PROFILE
               value: "dev"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8900
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 2
+          # 애플리케이션이 정상 상태를 유지하고 있는지 지속해서 검사
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8900
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 2
+        - name: mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123456"
+            - name: MYSQL_DATABASE
+              value: develop
       restartPolicy: Always
+
