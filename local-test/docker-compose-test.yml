@@ -13,7 +13,7 @@ services:
       - kafka
     networks:
       - bb_network
-    command: sh "sleep 20"
+    command: sh -c "sleep 20"
 
   config:
     platform: linux/amd64
@@ -32,7 +32,7 @@ services:
       - discovery
     networks:
       - bb_network
-    command: sh "sleep 30"
+    command: sh -c "sleep 30"
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -55,13 +55,14 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "config-topic:1:1"
+      KAFKA_CREATE_TOPICS: "config-topic:1:1, SendCardMessageNotificationTopic:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - zookeeper
     networks:
       - bb_network
+
   mongodb:
     image: mongo
     container_name: mongodb
@@ -71,6 +72,7 @@ services:
       - ./mongodb:/data/db
     networks:
       - bb_network
+
   mysql:
     image: mysql
     volumes:
@@ -84,6 +86,17 @@ services:
       MYSQL_DATABASE: develop
     networks:
       - bb_network
+
+  redis:
+    image: "redis:latest"
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/data
+    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "123456" ]
+
+
   apigateway:
     platform: linux/amd64
     image: nowgnas/bb:apigateway
@@ -97,7 +110,61 @@ services:
       - config
     networks:
       - bb_network
-    command: sh "sleep 10"
+    command: sh -c "sleep 20"
+
+  auth:
+    platform: linux/amd64
+    image: nowgnas/bb:auth
+    container_name: auth-service
+    ports:
+      - 9000:9000
+    environment:
+      - USE_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+      - apigateway
+    networks:
+      - bb_network
+    command: sh -c "sleep 10"
+  user:
+    platform: linux/amd64
+    image: nowgnas/bb:user
+    container_name: user-service
+    ports:
+      - 8600:8600
+    environment:
+      - USE_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+      - apigateway
+    networks:
+      - bb_network
+    command: sh -c "sleep 10"
+
+  product:
+    platform: linux/amd64
+    image: nowgnas/bb:product
+    container_name: product-service
+    ports:
+      - 8800:8800
+    environment:
+      - USE_PROFILE=dev
+      - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+      - config
+    networks:
+      - bb_network
+    command: sh -c "sleep 10"
+
 volumes:
   data: { }
 
