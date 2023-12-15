@@ -1,0 +1,106 @@
+version: "3"
+services:
+  discovery:
+    platform: linux/amd64
+    image: nowgnas/bb:discovery
+    container_name: discovery-service
+    ports:
+      - 8761:8761
+    environment:
+      USE_PROFILE: dev
+    depends_on:
+      - zookeeper
+      - kafka
+    networks:
+      - bb_network
+    command: sh "sleep 20"
+
+  config:
+    platform: linux/amd64
+    image: nowgnas/bb:config
+    container_name: config-service
+    ports:
+      - 8888:8888
+    environment:
+      - GITHUB_USERNAME=${GITHUB_USERNAME}
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+      - ENCRYPT_SECRET_KEY=${ENCRYPT_SECRET_KEY}
+      - USE_PROFILE=dev
+    depends_on:
+      - zookeeper
+      - kafka
+      - discovery
+    networks:
+      - bb_network
+    command: sh "sleep 30"
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - bb_network
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    expose:
+      - "9093"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "config-topic:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+    networks:
+      - bb_network
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb:/data/db
+    networks:
+      - bb_network
+  mysql:
+    image: mysql
+    volumes:
+      - ./query/bb/conf.d/:/etc/mysql/conf.d/
+      - ./query/bb/initdb.d/:/docker-entrypoint-initdb.d/
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: develop
+    networks:
+      - bb_network
+  apigateway:
+    platform: linux/amd64
+    image: nowgnas/bb:apigateway
+    container_name: apigateway-service
+    ports:
+      - 8000:8000
+    environment:
+      - USE_PROFILE=dev
+    depends_on:
+      - discovery
+      - config
+    networks:
+      - bb_network
+    command: sh "sleep 10"
+volumes:
+  data: { }
+
+networks:
+  bb_network:
+    driver: bridge
