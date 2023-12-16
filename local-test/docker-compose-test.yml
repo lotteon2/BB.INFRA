@@ -111,59 +111,59 @@ services:
     networks:
       - bb_network
     command: sh -c "sleep 20"
-
-  auth:
-    platform: linux/amd64
-    image: nowgnas/bb:auth
-    container_name: auth-service
-    ports:
-      - 9000:9000
-    environment:
-      - USE_PROFILE=dev
-    depends_on:
-      - zookeeper
-      - kafka
-      - discovery
-      - config
-      - apigateway
-    networks:
-      - bb_network
-    command: sh -c "sleep 10"
-  user:
-    platform: linux/amd64
-    image: nowgnas/bb:user
-    container_name: user-service
-    ports:
-      - 8600:8600
-    environment:
-      - USE_PROFILE=dev
-    depends_on:
-      - zookeeper
-      - kafka
-      - discovery
-      - config
-      - apigateway
-    networks:
-      - bb_network
-    command: sh -c "sleep 10"
-
-  product:
-    platform: linux/amd64
-    image: nowgnas/bb:product
-    container_name: product-service
-    ports:
-      - 8800:8800
-    environment:
-      - USE_PROFILE=dev
-      - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
-    depends_on:
-      - zookeeper
-      - kafka
-      - discovery
-      - config
-    networks:
-      - bb_network
-    command: sh -c "sleep 10"
+#
+#  auth:
+#    platform: linux/amd64
+#    image: nowgnas/bb:auth
+#    container_name: auth-service
+#    ports:
+#      - 9000:9000
+#    environment:
+#      - USE_PROFILE=dev
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#      - discovery
+#      - config
+#      - apigateway
+#    networks:
+#      - bb_network
+#    command: sh -c "sleep 10"
+#  user:
+#    platform: linux/amd64
+#    image: nowgnas/bb:user
+#    container_name: user-service
+#    ports:
+#      - 8600:8600
+#    environment:
+#      - USE_PROFILE=dev
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#      - discovery
+#      - config
+#      - apigateway
+#    networks:
+#      - bb_network
+#    command: sh -c "sleep 10"
+#
+#  product:
+#    platform: linux/amd64
+#    image: nowgnas/bb:product
+#    container_name: product-service
+#    ports:
+#      - 8800:8800
+#    environment:
+#      - USE_PROFILE=dev
+#      - SPRING_CONFIG_ACTIVATE_ON_PROFILE=dev
+#    depends_on:
+#      - zookeeper
+#      - kafka
+#      - discovery
+#      - config
+#    networks:
+#      - bb_network
+#    command: sh -c "sleep 10"
 
 volumes:
   data: { }
