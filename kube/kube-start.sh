@@ -3,7 +3,6 @@
 
 declare -A services=(
     [1]='admin'
-    [2]='apigateway'
     [3]='auth'
     [4]='delivery'
     [5]='notification'
@@ -15,14 +14,21 @@ declare -A services=(
     [12]='wishlist'
 )
 
+kubectl apply -f ../config/namespace.yml
+kubectl apply -f ../config/mysql-config.yml
+kubectl apply -f ../config/redis-config.yml
 
 kubectl apply -f ../zookeeper/dev/deployment.yml
 kubectl apply -f ../zookeeper/dev/service.yml
 
-
 kubectl apply -f ../kafka/dev/deployment.yml
 kubectl apply -f ../kafka/dev/service.yml
 
+kubectl apply -f ../redis/prod/deployment.yml
+kubectl apply -f ../redis/prod/service.yml
+
+kubectl apply -f ../mongodb/dev/deployment.yml
+kubectl apply -f ../mongodb/dev/service.yml
 
 kubectl apply -f ../discovery/dev/deployment.yml
 kubectl apply -f ../discovery/dev/service.yml
@@ -31,6 +37,8 @@ kubectl apply -f ../config/dev/config-local.yaml
 kubectl apply -f ../config/dev/deployment.yml
 kubectl apply -f ../config/dev/service.yml
 
+kubectl apply -f ../apigateway/prod/deployment.yml
+kubectl apply -f ../apigateway/prod/service.yml
 
 selected_services=("${!services[@]}")
 
@@ -58,8 +66,9 @@ while true; do
             echo "$selected_service service running start"
             # Add your code for the selected service here
 
-            kubectl apply -f ../$selected_service/dev/deployment.yml
-            kubectl apply -f ../$selected_service/dev/service.yml
+            kubectl apply -f ../$selected_service/prod/initdb-config.yml
+            kubectl apply -f ../$selected_service/prod/deployment.yml
+            kubectl apply -f ../$selected_service/prod/service.yml
 
             # Update the available services for the next iteration
             unset "services[$service_choice]"
