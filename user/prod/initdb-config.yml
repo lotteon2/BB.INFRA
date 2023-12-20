@@ -29,5 +29,5 @@ data:
         name                  varchar(255) null,
         created_at       datetime(6) DEFAULT CURRENT_TIMESTAMP(6) null,
         is_deleted    bit  DEFAULT false        null,
-        updated_at       datetime(6) DEFAULT CURRENT_TIMESTAMP(6) null,
+        updated_at       datetime(6) DEFAULT CURRENT_TIMESTAMP(6) null
     );
