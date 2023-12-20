@@ -5,6 +5,7 @@ metadata:
   namespace: prod
 data:
   initdb.sql: |
+    use user
     create table social_user
     (
         id            bigint       not null
