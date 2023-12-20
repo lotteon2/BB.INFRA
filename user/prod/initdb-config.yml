@@ -5,15 +5,15 @@ metadata:
   namespace: prod
 data:
   initdb.sql: |
-    use user
+    use user;
     create table social_user
     (
         id            bigint       not null
             primary key,
         email         varchar(255) null,
-        created_at       datetime(6) DEFAULT CURRENT_TIMESTAMP(6) null,
+        created_at    datetime(6) DEFAULT CURRENT_TIMESTAMP(6)  null,
         is_deleted    bit  DEFAULT false        null,
-        updated_at       datetime(6) DEFAULT CURRENT_TIMESTAMP(6) null,
+        updated_at    datetime(6) DEFAULT CURRENT_TIMESTAMP(6)  null,
         nickname      varchar(255) null,
         oauth_id      bigint       null,
         phone_number  varchar(255) null,

@@ -5,7 +5,7 @@ metadata:
   namespace: prod
 data:
   initdb.sql: |
-    use product
+    use product;
     create table if not exists flower
     (
     flower_id          bigint auto_increment
