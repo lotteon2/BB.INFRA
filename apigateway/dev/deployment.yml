@@ -39,7 +39,7 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 30
             timeoutSeconds: 2
-        - name: redis
+        - name: redis-kube
           image: redis:latest
           ports:
             - containerPort: 6379

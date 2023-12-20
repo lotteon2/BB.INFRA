@@ -65,11 +65,11 @@ services:
 
   mongodb:
     image: mongo
-    container_name: mongodb
+    container_name: mongodb-kube
     ports:
       - 27017:27017
     volumes:
-      - ./mongodb:/data/db
+      - ./mongodb-kube:/data/db
     networks:
       - bb_network
 
@@ -89,12 +89,12 @@ services:
 
   redis:
     image: "redis:latest"
-    container_name: "redis"
+    container_name: "redis-kube"
     ports:
       - "6379:6379"
     volumes:
-      - ./redis:/data
-    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "123456" ]
+      - ./redis-kube:/data
+    command: [ "redis-kube-server", "--appendonly", "yes", "--requirepass", "123456" ]
     networks:
       - bb_network
 

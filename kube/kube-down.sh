@@ -10,8 +10,8 @@
 #
 #done
 
-#kubectl delete service mongodb
-#kubectl delete deployment mongodb
+#kubectl delete service mongodb-kube
+#kubectl delete deployment mongodb-kube
 #
 #kubectl delete service kafka
 #kubectl delete deployment kafka

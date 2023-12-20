@@ -26,8 +26,8 @@ EOL
   echo "Created $service/prod/service.yml"
 done
 #
-#        - name: redis
-#          image: redis:latest
+#        - name: redis-kube
+#          image: redis-kube:latest
 #          ports:
 #            - containerPort: 6379
 #          env:

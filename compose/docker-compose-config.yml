@@ -64,11 +64,11 @@ services:
       - bb_network
   mongodb:
     image: mongo
-    container_name: mongodb
+    container_name: mongodb-kube
     ports:
       - 27017:27017
     volumes:
-      - ./mongodb:/data/db
+      - ./mongodb-kube:/data/db
     networks:
       - bb_network
   mysql:

@@ -24,11 +24,11 @@ kubectl apply -f ../zookeeper/dev/service.yml
 kubectl apply -f ../kafka/dev/deployment.yml
 kubectl apply -f ../kafka/dev/service.yml
 
-kubectl apply -f ../redis/prod/deployment.yml
-kubectl apply -f ../redis/prod/service.yml
+kubectl apply -f ../redis-kube/prod/deployment.yml
+kubectl apply -f ../redis-kube/prod/service.yml
 
-kubectl apply -f ../mongodb/dev/deployment.yml
-kubectl apply -f ../mongodb/dev/service.yml
+kubectl apply -f ../mongodb-kube/dev/deployment.yml
+kubectl apply -f ../mongodb-kube/dev/service.yml
 
 kubectl apply -f ../discovery/dev/deployment.yml
 kubectl apply -f ../discovery/dev/service.yml
