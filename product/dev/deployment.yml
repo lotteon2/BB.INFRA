@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: product-service
+  namespace: prod
   labels:
     app: product-service
 spec:
@@ -23,7 +24,9 @@ spec:
             - containerPort: 8800
           env:
             - name: USE_PROFILE
-              value: "dev"
+              value: "prod"
+            - name: SPRING_CONFIG_ACTIVATE_ON_PROFILE
+              value: "prod"
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
@@ -47,6 +50,17 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: "123456"
             - name: MYSQL_DATABASE
-              value: develop
+              value: product
+          volumeMounts:
+            - name: product-initdb
+              mountPath: /docker-entrypoint-initdb.d
+            - name: mysql-config
+              mountPath: /etc/mysql/conf.d
+      volumes:
+        - name: product-initdb
+          configMap:
+            name: product-initdb-config
+        - name: mysql-config
+          configMap:
+            name: mysql-config
       restartPolicy: Always
-

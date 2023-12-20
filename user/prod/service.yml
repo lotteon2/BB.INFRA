@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: prod
+  labels:
+    app: user-service
+    profile: prod  # Add the profile label here
+spec:
+  selector:
+    app: user-service
+  ports:
+    - name: app
+      port: 8600
+      targetPort: 8600
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP
+

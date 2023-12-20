@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apigateway-initdb-config
+  namespace: prod
+data:
+  initdb.sql: |

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zookeeper
+  namespace: prod
   labels:
     app: zookeeper
 spec:
@@ -21,14 +22,4 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 2181
-          readinessProbe:
-            tcpSocket:
-              port: 2181
-            initialDelaySeconds: 30
-            periodSeconds: 20
-          # 애플리케이션이 정상 상태를 유지하고 있는지 지속해서 검사
-          livenessProbe:
-            tcpSocket:
-              port: 2181
-            initialDelaySeconds: 30
-            periodSeconds: 20
+      restartPolicy: Always

@@ -2,11 +2,18 @@ apiVersion: v1
 kind: Service
 metadata:
   name: product-service
+  namespace: prod
+  labels:
+    app: product-service
+    profile: prod  # Add the profile label here
 spec:
   selector:
     app: product-service
   ports:
-    - protocol: TCP
+    - name: app
       port: 8800
       targetPort: 8800
+    - name: mysql
+      port: 3306
+      targetPort: 3306
   type: ClusterIP

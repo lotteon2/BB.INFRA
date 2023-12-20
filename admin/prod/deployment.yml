@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-service
+  namespace: prod
+  labels:
+    app: admin-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-service
+  template:
+    metadata:
+      name: admin-service
+      labels:
+        app: admin-service
+    spec:
+      containers:
+        - name: admin-service
+          image: nowgnas/bb:admin
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8200
+          env:
+            - name: USE_PROFILE
+              value: "prod"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8200
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 2
+          # 애플리케이션이 정상 상태를 유지하고 있는지 지속해서 검사
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8200
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 2
+        - name: mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123456"
+            - name: MYSQL_DATABASE
+              value: admin
+          volumeMounts:
+            - name: admin-initdb
+              mountPath: /docker-entrypoint-initdb.d
+            - name: mysql-config
+              mountPath: /etc/mysql/conf.d
+      volumes:
+        - name: admin-initdb
+          configMap:
+            name: admin-initdb-config
+        - name: mysql-config
+          configMap:
+            name: mysql-config
+      restartPolicy: Always
+

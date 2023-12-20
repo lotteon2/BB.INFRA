@@ -113,3 +113,10 @@ create table store_manager
     email                 varchar(255) null,
     name                  varchar(255) null
 );
+
+create table card_template
+(
+    template_id bigint auto_increment primary key,
+    color       varchar(50)  not null,
+    image_url   varchar(255) not null
+);

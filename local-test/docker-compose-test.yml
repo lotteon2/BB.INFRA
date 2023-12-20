@@ -1,7 +1,7 @@
 version: "3"
 services:
   discovery:
-    platform: linux/amd64
+
     image: nowgnas/bb:discovery
     container_name: discovery-service
     ports:
@@ -16,7 +16,7 @@ services:
     command: sh -c "sleep 20"
 
   config:
-    platform: linux/amd64
+
     image: nowgnas/bb:config
     container_name: config-service
     ports:
@@ -95,10 +95,11 @@ services:
     volumes:
       - ./redis:/data
     command: [ "redis-server", "--appendonly", "yes", "--requirepass", "123456" ]
-
+    networks:
+      - bb_network
 
   apigateway:
-    platform: linux/amd64
+
     image: nowgnas/bb:apigateway
     container_name: apigateway-service
     ports:
@@ -113,7 +114,7 @@ services:
     command: sh -c "sleep 20"
 #
 #  auth:
-#    platform: linux/amd64
+#
 #    image: nowgnas/bb:auth
 #    container_name: auth-service
 #    ports:
@@ -130,7 +131,7 @@ services:
 #      - bb_network
 #    command: sh -c "sleep 10"
 #  user:
-#    platform: linux/amd64
+#
 #    image: nowgnas/bb:user
 #    container_name: user-service
 #    ports:
@@ -148,7 +149,7 @@ services:
 #    command: sh -c "sleep 10"
 #
 #  product:
-#    platform: linux/amd64
+#
 #    image: nowgnas/bb:product
 #    container_name: product-service
 #    ports:

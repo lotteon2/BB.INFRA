@@ -39,14 +39,11 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 30
             timeoutSeconds: 2
-        - name: mysql
-          image: mysql:latest
+        - name: redis
+          image: redis:latest
           ports:
-            - containerPort: 3306
+            - containerPort: 6379
           env:
-            - name: MYSQL_ROOT_PASSWORD
+            - name: REDIS_PASSWORD
               value: "123456"
-            - name: MYSQL_DATABASE
-              value: develop
       restartPolicy: Always
-
