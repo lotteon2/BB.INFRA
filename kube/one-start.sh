@@ -37,7 +37,7 @@ while true; do
             echo "Exiting the script"
             exit 0
             ;;
-        [1-9]|1[0-2])
+        [1-9]|1[0-3])
             selected_service=${services[$service_choice]}
             echo "$selected_service service running start"
             # Add your code for the selected service here

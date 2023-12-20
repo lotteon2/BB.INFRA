@@ -3,18 +3,14 @@ kind: Service
 metadata:
   name: product-service
   namespace: prod
-  labels:
-    app: product-service
-    profile: prod  # Add the profile label here
 spec:
-  selector:
-    app: product-service
+  type: ClusterIP
   ports:
     - name: app
-      port: 8800
       targetPort: 8800
+      port: 8800
     - name: mysql
-      port: 3306
       targetPort: 3306
-  type: ClusterIP
-
+      port: 3306
+  selector:
+    app: product-service

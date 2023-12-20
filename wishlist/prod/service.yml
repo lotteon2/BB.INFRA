@@ -3,18 +3,14 @@ kind: Service
 metadata:
   name: wishlist-service
   namespace: prod
-  labels:
-    app: wishlist-service
-    profile: prod  # Add the profile label here
 spec:
-  selector:
-    app: wishlist-service
+  type: ClusterIP
   ports:
     - name: app
-      port: 8500
       targetPort: 8500
+      port: 8500
     - name: mysql
-      port: 3306
       targetPort: 3306
-  type: ClusterIP
-
+      port: 3306
+  selector:
+    app: wishlist-service

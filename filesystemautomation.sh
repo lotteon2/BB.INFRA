@@ -12,14 +12,23 @@ for ((i=0; i<${#services[@]}; i++)); do
 
 
   # Create local-service.yml for each service
-  cat <<EOL > "$service/prod/initdb-config.yml"
+  cat <<EOL > "$service/prod/service.yml"
 apiVersion: v1
-kind: ConfigMap
+kind: Service
 metadata:
-  name: $service-initdb-config
+  name: $service-service
   namespace: prod
-data:
-  initdb.sql: |
+spec:
+  type: ClusterIP
+  ports:
+    - name: app
+      targetPort: $service_port
+      port: $service_port
+    - name: mysql
+      targetPort: 3306
+      port: 3306
+  selector:
+    app: $service-service
 EOL
 
 

@@ -3,18 +3,14 @@ kind: Service
 metadata:
   name: notification-service
   namespace: prod
-  labels:
-    app: notification-service
-    profile: prod  # Add the profile label here
 spec:
-  selector:
-    app: notification-service
+  type: ClusterIP
   ports:
     - name: app
-      port: 8400
       targetPort: 8400
+      port: 8400
     - name: mysql
-      port: 3306
       targetPort: 3306
-  type: ClusterIP
-
+      port: 3306
+  selector:
+    app: notification-service
