@@ -8,7 +8,7 @@ data:
     use user;
     create table social_user
     (
-        id            bigint       not null
+        id            bigint       not null auto_increment
             primary key,
         email         varchar(255) null,
         created_at    DATETIME DEFAULT CURRENT_TIMESTAMP  null,
@@ -22,7 +22,7 @@ data:
 
     create table store_manager
     (
-        id                    bigint       not null
+        id                    bigint       not null 
             primary key,
         business_number_image varchar(255) null,
         email                 varchar(255) null,
