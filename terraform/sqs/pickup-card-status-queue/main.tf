@@ -18,3 +18,20 @@ resource "aws_sqs_queue" "pickup-card-status-queue" {
 resource "aws_sqs_queue" "dead_letter_queue" {
   name = "pickup-card-status-dead-letter-queue"
 }
+resource "aws_sqs_queue_policy" "example_queue_policy" {
+  queue_url = aws_sqs_queue.pickup-card-status-queue.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "sqs:*",
+      "Resource": "${aws_sqs_queue.pickup-card-status-queue.arn}"
+    }
+  ]
+}
+EOF
+}

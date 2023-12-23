@@ -1,12 +1,8 @@
-provider "aws" {
-  region = "ap-northeast-1"
-}
-
-resource "aws_sqs_queue" "out-of-stock-notification-queue" {
-  name                       = "out-of-stock-notification-queue"
+resource "aws_sqs_queue" "review-register-queue" {
+  name                       = "review-register-queue"
   delay_seconds              = 0
   max_message_size           = 262144
-  message_retention_seconds  = 345600
+  message_retention_seconds  = 345600 # 4 days
   visibility_timeout_seconds = 40
   receive_wait_time_seconds  = 10
   redrive_policy             = jsonencode({
@@ -16,10 +12,10 @@ resource "aws_sqs_queue" "out-of-stock-notification-queue" {
 }
 
 resource "aws_sqs_queue" "dead_letter_queue" {
-  name = "out-of-stock-notification-dead-letter-queue"
+  name = "review-register-dead-letter-queue"
 }
 resource "aws_sqs_queue_policy" "example_queue_policy" {
-  queue_url = aws_sqs_queue.out-of-stock-notification-queue.id
+  queue_url = aws_sqs_queue.review-register-queue.id
 
   policy = <<EOF
 {
@@ -29,9 +25,12 @@ resource "aws_sqs_queue_policy" "example_queue_policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "sqs:*",
-      "Resource": "${aws_sqs_queue.out-of-stock-notification-queue.arn}"
+      "Resource": "${aws_sqs_queue.review-register-queue.arn}"
     }
   ]
 }
 EOF
+}
+output "review-register-queue-arn" {
+  value = aws_sqs_queue.review-register-queue.arn
 }
