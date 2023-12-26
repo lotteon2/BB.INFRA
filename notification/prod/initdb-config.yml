@@ -5,7 +5,7 @@ metadata:
   namespace: prod
 data:
   initdb.sql: |
-    use notification
+    use notification;
     create table if not exists notification
     (
         notification_id      bigint auto_increment
