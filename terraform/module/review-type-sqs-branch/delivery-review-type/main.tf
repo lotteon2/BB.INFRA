@@ -1,5 +1,5 @@
-resource "aws_sqs_queue" "product-review-data-update-queue" {
-  name                       = "product-review-data-update-queue"
+resource "aws_sqs_queue" "delivery-review-type-check-queue" {
+  name                       = "delivery-review-type-check-queue"
   delay_seconds              = 0
   max_message_size           = 262144
   message_retention_seconds  = 345600 # 4 days
@@ -12,10 +12,10 @@ resource "aws_sqs_queue" "product-review-data-update-queue" {
 }
 
 resource "aws_sqs_queue" "dead_letter_queue" {
-  name = "product-review-data-update-dead-letter-queue"
+  name = "delivery-review-type-check-dead-letter-queue"
 }
 resource "aws_sqs_queue_policy" "example_queue_policy" {
-  queue_url = aws_sqs_queue.product-review-data-update-queue.id
+  queue_url = aws_sqs_queue.delivery-review-type-check-queue.id
 
   policy = <<EOF
 {
@@ -25,12 +25,12 @@ resource "aws_sqs_queue_policy" "example_queue_policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "sqs:*",
-      "Resource": "${aws_sqs_queue.product-review-data-update-queue.arn}"
+      "Resource": "${aws_sqs_queue.delivery-review-type-check-queue.arn}"
     }
   ]
 }
 EOF
 }
-output "product-review-data-update-queue-arn" {
-  value = aws_sqs_queue.product-review-data-update-queue.arn
+output "sale-count-queue-arn" {
+  value = aws_sqs_queue.delivery-review-type-check-queue.arn
 }

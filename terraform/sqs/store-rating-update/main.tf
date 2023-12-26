@@ -1,5 +1,9 @@
-resource "aws_sqs_queue" "product-review-data-update-queue" {
-  name                       = "product-review-data-update-queue"
+provider "aws" {
+  region = "ap-northeast-1"
+}
+
+resource "aws_sqs_queue" "store-average-rating-update-queue" {
+  name                       = "store-average-rating-update-queue"
   delay_seconds              = 0
   max_message_size           = 262144
   message_retention_seconds  = 345600 # 4 days
@@ -12,10 +16,10 @@ resource "aws_sqs_queue" "product-review-data-update-queue" {
 }
 
 resource "aws_sqs_queue" "dead_letter_queue" {
-  name = "product-review-data-update-dead-letter-queue"
+  name = "store-average-rating-update-dead-letter-queue"
 }
 resource "aws_sqs_queue_policy" "example_queue_policy" {
-  queue_url = aws_sqs_queue.product-review-data-update-queue.id
+  queue_url = aws_sqs_queue.store-average-rating-update-queue.id
 
   policy = <<EOF
 {
@@ -25,12 +29,9 @@ resource "aws_sqs_queue_policy" "example_queue_policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "sqs:*",
-      "Resource": "${aws_sqs_queue.product-review-data-update-queue.arn}"
+      "Resource": "${aws_sqs_queue.store-average-rating-update-queue.arn}"
     }
   ]
 }
 EOF
-}
-output "product-review-data-update-queue-arn" {
-  value = aws_sqs_queue.product-review-data-update-queue.arn
 }

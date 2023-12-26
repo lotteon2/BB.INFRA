@@ -20,7 +20,7 @@ module "sale-count-update-queue" {
 
 # sns subscribe
 resource "aws_sns_topic_subscription" "review-register-subscribe" {
-  endpoint  = module.review-register-queue.review-register-queue-arn
+  endpoint  = module.review-register-queue.product-review-data-update-queue-arn
   protocol  = "sqs"
   topic_arn = module.review-register-event.review_register_event-arn
 }

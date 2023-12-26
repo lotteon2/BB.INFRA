@@ -1,163 +1,222 @@
 provider "aws" {
-  region = "us-west-2"  # Change this to your desired region
+  region = "ap-northeast-2"
 }
 
-# Create VPC
-resource "aws_vpc" "my_vpc" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
+locals {
+  cluster_name = "simon-test"
+}
+
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "simon-test"
+  cidr = "10.194.0.0/16"
+
+  azs             = ["ap-northeast-2a", "ap-northeast-2c"]
+  public_subnets  = ["10.194.0.0/24", "10.194.1.0/24"]
+  private_subnets = ["10.194.100.0/24", "10.194.101.0/24"]
+
+  enable_nat_gateway     = true
+  one_nat_gateway_per_az = true
+
   enable_dns_hostnames = true
-  tags = {
-    Name = "MyVPC"
+
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"                      = "1"
+  }
+
+  private_subnet_tags = {
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"             = "1"
   }
 }
 
-# Create Subnet
-resource "aws_subnet" "my_subnet" {
-  vpc_id                  = aws_vpc.my_vpc.id
-  cidr_block              = "10.0.0.0/24"
-  availability_zone       = "us-west-2a"  # Change this to your desired availability zone
-  map_public_ip_on_launch = true
-  tags = {
-    Name = "MySubnet"
-  }
-}
-
-# Output VPC and Subnet IDs
-output "vpc_id" {
-  value = aws_vpc.my_vpc.id
-}
-
-output "subnet_id" {
-  value = aws_subnet.my_subnet.id
-}
-
+# Fargate만 있기 때문에 구동후 수동으로 coredns 패치를 해줘야 합니다
+# https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/fargate-getting-started.html#fargate-gs-coredns
 
 module "eks" {
-  source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "my-eks-cluster"
-  cluster_version = "1.21"
-  subnets         = ["subnet-xxxxxxxxxxxxxxxxx", "subnet-yyyyyyyyyyyyyyyyy"]  # Add your subnet IDs
-  vpc_id          = "vpc-xxxxxxxxxxxxxxxxx"  # Add your VPC ID
-  key_name        = "your-key-pair"  # Add your key pair name
+  source = "terraform-aws-modules/eks/aws"
 
-  node_groups = {
-    eks_nodes = {
-      desired_capacity = 2
-      max_capacity     = 3
-      min_capacity     = 1
+  cluster_name                    = local.cluster_name
+  cluster_version                 = "1.21"
+  cluster_endpoint_private_access = false
+  cluster_endpoint_public_access  = true
 
-      instance_type = "t2.small"  # Choose an instance type that suits your needs
+  cluster_addons = {
+    coredns = {
+      resolve_conflicts = "OVERWRITE"
+    }
+    kube-proxy = {}
+    vpc-cni = {
+      resolve_conflicts = "OVERWRITE"
+    }
+  }
+
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+
+  cloudwatch_log_group_retention_in_days = 1
+
+  fargate_profiles = {
+    default = {
+      name = "default"
+      selectors = [
+        {
+          namespace = "kube-system"
+        },
+        {
+          namespace = "default"
+        }
+      ]
+    }
+  }
+}
+
+locals {
+  lb_controller_iam_role_name        = "inhouse-eks-aws-lb-ctrl"
+  lb_controller_service_account_name = "aws-load-balancer-controller"
+}
+
+data "aws_eks_cluster_auth" "this" {
+  name = local.cluster_name
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    token                  = data.aws_eks_cluster_auth.this.token
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  }
+}
+
+module "lb_controller_role" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+
+  create_role = true
+
+  role_name        = local.lb_controller_iam_role_name
+  role_path        = "/"
+  role_description = "Used by AWS Load Balancer Controller for EKS"
+
+  role_permissions_boundary_arn = ""
+
+  provider_url = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
+  oidc_fully_qualified_subjects = [
+    "system:serviceaccount:kube-system:${local.lb_controller_service_account_name}"
+  ]
+  oidc_fully_qualified_audiences = [
+    "sts.amazonaws.com"
+  ]
+}
+
+data "http" "iam_policy" {
+  url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.0/docs/install/iam_policy.json"
+}
+
+resource "aws_iam_role_policy" "controller" {
+  name_prefix = "AWSLoadBalancerControllerIAMPolicy"
+  policy      = data.http.iam_policy.body
+  role        = module.lb_controller_role.iam_role_name
+}
+
+resource "helm_release" "release" {
+  name       = "aws-load-balancer-controller"
+  chart      = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  namespace  = "kube-system"
+
+  dynamic "set" {
+    for_each = {
+      "clusterName"           = module.eks.cluster_id
+      "serviceAccount.create" = "true"
+      "serviceAccount.name"   = local.lb_controller_service_account_name
+      "region"                = "ap-northeast-2"
+      "vpcId"                 = module.vpc.vpc_id
+      "image.repository"      = "602401143452.dkr.ecr.ap-northeast-2.amazonaws.com/amazon/aws-load-balancer-controller"
+
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.lb_controller_role.iam_role_arn
+    }
+    content {
+      name  = set.key
+      value = set.value
     }
   }
 }
 
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_ca_certificate)
-  token                  = module.eks.cluster_token
-  load_config_file       = false
+  token                  = data.aws_eks_cluster_auth.this.token
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 }
 
-resource "kubernetes_namespace" "frontend" {
+resource "kubernetes_deployment" "echo" {
   metadata {
-    name = "frontend"
+    name = "echo"
   }
-}
-
-resource "kubernetes_namespace" "backend" {
-  metadata {
-    name = "backend"
-  }
-}
-
-resource "kubernetes_deployment" "nginx" {
-  metadata {
-    name      = "nginx"
-    namespace = kubernetes_namespace.frontend.metadata[0].name
-  }
-
   spec {
-    replicas = 2
-
+    replicas = 1
     selector {
       match_labels = {
-        app = "nginx"
+        "app.kubernetes.io/name" = "echo"
       }
     }
-
     template {
       metadata {
         labels = {
-          app = "nginx"
+          "app.kubernetes.io/name" = "echo"
         }
       }
-
       spec {
         container {
-          name  = "nginx"
-          image = "nginx:latest"
-          ports {
-            container_port = 80
-          }
+          image = "k8s.gcr.io/echoserver:1.10"
+          name  = "echo"
         }
       }
     }
   }
 }
 
-resource "kubernetes_deployment" "spring_cloud" {
+resource "kubernetes_service" "echo" {
   metadata {
-    name      = "spring-cloud"
-    namespace = kubernetes_namespace.backend.metadata[0].name
+    name = "echo"
   }
-
-  spec {
-    replicas = 2
-
-    selector {
-      match_labels = {
-        app = "spring-cloud"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "spring-cloud"
-        }
-      }
-
-      spec {
-        container {
-          name  = "spring-cloud"
-          image = "your-registry/your-spring-cloud-image:latest"  # Replace with your actual image
-          ports {
-            container_port = 8080
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_service" "nginx_service" {
-  metadata {
-    name      = "nginx-service"
-    namespace = kubernetes_namespace.frontend.metadata[0].name
-  }
-
   spec {
     selector = {
-      app = kubernetes_deployment.nginx.spec[0].template[0].metadata[0].labels[0].app
+      "app.kubernetes.io/name" = "echo"
     }
-
     port {
-      protocol    = "TCP"
-      port        = 80
-      target_port = 80
+      port        = 8080
+      target_port = 8080
     }
+    type = "NodePort"
+  }
+}
 
-    type = "LoadBalancer"
+resource "kubernetes_ingress_v1" "alb" {
+  metadata {
+    name = "alb"
+    annotations = {
+      "alb.ingress.kubernetes.io/scheme"      = "internet-facing",
+      "alb.ingress.kubernetes.io/target-type" = "ip",
+    }
+  }
+  spec {
+    ingress_class_name = "alb"
+    rule {
+      http {
+        path {
+          backend {
+            service {
+              name = "echo"
+              port {
+                number = 8080
+              }
+            }
+          }
+          path = "/*"
+        }
+      }
+    }
   }
 }
