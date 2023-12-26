@@ -2,8 +2,9 @@
 
 
 declare -A services=(
-    [1]='admin'
-    [2]='config'
+    [14]='orderquery'
+    [1]='config'
+    [2]='giftcard'
     [3]='auth'
     [4]='delivery'
     [5]='notification'
@@ -38,7 +39,7 @@ while true; do
             echo "Exiting the script"
             exit 0
             ;;
-        [1-9]|1[0-3])
+        [0-9]|1[0-4])
             selected_service=${services[$service_choice]}
             echo "$selected_service service running restart"
             # Add your code for the selected service here

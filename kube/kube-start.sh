@@ -2,7 +2,7 @@
 
 
 declare -A services=(
-    [1]='admin'
+    [1]='giftcard'
     [3]='auth'
     [4]='delivery'
     [5]='notification'
@@ -39,6 +39,10 @@ kubectl apply -f ../config/dev/service.yml
 
 kubectl apply -f ../apigateway/prod/deployment.yml
 kubectl apply -f ../apigateway/prod/service.yml
+
+kubectl apply -f ../orderquery/prod/deployment.yml
+kubectl apply -f ../orderquery/prod/service.yml
+
 
 selected_services=("${!services[@]}")
 
