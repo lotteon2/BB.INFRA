@@ -5,7 +5,7 @@ metadata:
   namespace: prod
 data:
   initdb.sql: |
-    use auth
+    use auth;
     create table social_auth
     (
         oauth_id         bigint      not null
