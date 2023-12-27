@@ -5,3 +5,71 @@ metadata:
   namespace: prod
 data:
   initdb.sql: |
+    use giftcard;
+    create table card_template
+    (
+    template_id bigint auto_increment primary key,
+    color       varchar(50)  not null,
+    image_url   varchar(255) not null
+    );
+    
+    DROP TABLE IF EXISTS `gift_card`;
+    /*!40101 SET @saved_cs_client     = @@character_set_client */;
+    /*!50503 SET character_set_client = utf8mb4 */;
+    CREATE TABLE `gift_card` (
+    `card_id` bigint NOT NULL AUTO_INCREMENT,
+    `content` longtext NOT NULL,
+    `created_at` datetime(6) DEFAULT NULL,
+    `order_product_id` bigint NOT NULL,
+    `password` varchar(255) NOT NULL,
+    `type` varchar(255) NOT NULL,
+    `user_id` bigint DEFAULT NULL,
+    `card_template_id` bigint NOT NULL,
+    PRIMARY KEY (`card_id`),
+    KEY `FKqkjhvycrfgm6n3b614e7bnx9v` (`card_template_id`),
+    CONSTRAINT `FKqkjhvycrfgm6n3b614e7bnx9v` FOREIGN KEY (`card_template_id`) REFERENCES `card_template` (`card_template_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    
+    insert into card_template (color, image_url)
+        VALUE
+        ('blue', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/blue/blue1.png'),
+        ('blue', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/blue/blue2.png'),
+        ('blue', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/blue/blue3.png'),
+        ('blue', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/blue/blue4.png'),
+        ('blue', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/blue/blue5.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix1.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix2.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix3.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix4.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix5.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix6.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix7.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix8.png'),
+        ('mix', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/mix/mix9.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink1.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink2.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink3.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink4.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink5.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink6.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink7.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink8.png'),
+        ('pink', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/pink/pink9.png'),
+        ('purple', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/purple/purple1.png'),
+        ('purple', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/purple/purple2.png'),
+        ('purple', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/purple/purple3.png'),
+        ('purple', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/purple/purple4.png'),
+        ('purple', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/purple/purple5.png'),
+        ('purple', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/purple/purple6.png'),
+        ('white', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/white/white1.png'),
+        ('white', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/white/white2.png'),
+        ('white', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/white/white3.png'),
+        ('white', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/white/white4.png'),
+        ('white', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/white/white5.png'),
+        ('white', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/white/white6.png'),
+        ('yellow', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/yellow/yellow1.png'),
+        ('yellow', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/yellow/yellow2.png'),
+        ('yellow', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/yellow/yellow3.png'),
+        ('yellow', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/yellow/yellow4.png'),
+        ('yellow', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/yellow/yellow5.png'),
+        ('yellow', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/yellow/yellow6.png');

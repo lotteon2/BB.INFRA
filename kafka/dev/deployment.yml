@@ -30,5 +30,18 @@ spec:
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: zookeeper:2181
             - name: KAFKA_CREATE_TOPICS
-              value: "config-topic:1:1, cart-delete:1:1, pickup-create:1:1, subscription-create:1:1, pickup-status-update:1:1, subscription-date-update:1:1, unsubscribe:1:1, coupon-status:1:1, stock-decrease:1:1, order-create:1:1, order-create-rollback:1:1, stock-decrease-rollback:1:1"
+              value: "config-topic:1:1,
+      pickup-create:1:1, 
+      stock-decrease:1:1, 
+      pickup-status-update:1:1, 
+      subscription-date-update:1:1, 
+      unsubscribe:1:1, 
+      store-average-rating-update:1:1, 
+      cart-delete:1:1, 
+      coupon-use:1:1, 
+      stock-decrease:1:1, 
+      order-create:1:1, 
+      order-create-rollback:1:1, 
+      stock-decrease-rollback:1:1,
+      settlement:1:1"
       restartPolicy: Always
