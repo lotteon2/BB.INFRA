@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngrinder-controller
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngrinder-controller
+  template:
+    metadata:
+      labels:
+        app: ngrinder-controller
+    spec:
+      containers:
+        - name: ngrinder-controller
+          image: ngrinder/controller:latest
+          ports:
+            - containerPort: 80
+          # Add additional container configurations as needed

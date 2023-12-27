@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngrinder-agent
+  namespace: prod
+spec:
+  replicas: 3  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: ngrinder-agent
+  template:
+    metadata:
+      labels:
+        app: ngrinder-agent
+    spec:
+      containers:
+        - name: ngrinder-agent
+          image: ngrinder/agent:latest
+          ports:
+            - containerPort: 16001
+          # Add additional container configurations as needed
