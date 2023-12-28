@@ -88,7 +88,7 @@ data:
         PRIMARY KEY (`order_subscription_id`)
     );
 
-    create table `order_settlement` (
+    create table `settlement` (
         `settlement_id` BIGINT NOT NULL AUTO_INCREMENT,
         `created_at` datetime(6) DEFAULT CURRENT_TIMESTAMP(6)  null,
         `is_deleted` bit DEFAULT false null,
