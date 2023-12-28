@@ -36,6 +36,6 @@ data:
     created_at timestamp default CURRENT_TIMESTAMP not null,
     is_deleted bit           default false                      null,
     updated_at timestamp default CURRENT_TIMESTAMP not null,
-    is_liked   bit                                 null,
+    selected_quantity bigint                      not null,
     primary key (product_id, user_id)
     );
