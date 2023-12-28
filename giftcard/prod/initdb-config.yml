@@ -6,30 +6,25 @@ metadata:
 data:
   initdb.sql: |
     use giftcard;
-    create table card_template
+    CREATE TABLE IF NOT EXISTS card_template
     (
-    template_id bigint auto_increment primary key,
-    color       varchar(50)  not null,
-    image_url   varchar(255) not null
+    template_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    color       VARCHAR(50)  NOT NULL,
+    image_url   VARCHAR(255) NOT NULL
     );
     
-    DROP TABLE IF EXISTS `gift_card`;
-    /*!40101 SET @saved_cs_client     = @@character_set_client */;
-    /*!50503 SET character_set_client = utf8mb4 */;
-    CREATE TABLE `gift_card` (
-    `card_id` bigint NOT NULL AUTO_INCREMENT,
-    `content` longtext NOT NULL,
-    `created_at` datetime(6) DEFAULT NULL,
-    `order_product_id` bigint NOT NULL,
-    `password` varchar(255) NOT NULL,
-    `type` varchar(255) NOT NULL,
-    `user_id` bigint DEFAULT NULL,
-    `card_template_id` bigint NOT NULL,
-    PRIMARY KEY (`card_id`),
-    KEY `FKqkjhvycrfgm6n3b614e7bnx9v` (`card_template_id`),
-    CONSTRAINT `FKqkjhvycrfgm6n3b614e7bnx9v` FOREIGN KEY (`card_template_id`) REFERENCES `card_template` (`card_template_id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
     
+    CREATE TABLE IF NOT EXISTS gift_card (
+    card_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    content LONGTEXT NOT NULL,
+    created_at       DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6)  null,
+    order_product_id BIGINT NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    user_id BIGINT DEFAULT NULL,
+    card_template_id BIGINT NOT NULL,
+    FOREIGN KEY (card_template_id) REFERENCES `card_template` (template_id)
+    );
     insert into card_template (color, image_url)
         VALUE
         ('blue', 'https://blooming-blooms.s3.ap-northeast-1.amazonaws.com/images/giftcards/blue/blue1.png'),

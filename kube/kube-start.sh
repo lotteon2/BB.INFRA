@@ -24,6 +24,7 @@ kubectl apply -f ../zookeeper/dev/service.yml
 kubectl apply -f ../kafka/dev/deployment.yml
 kubectl apply -f ../kafka/dev/service.yml
 
+kubectl apply -f ../config/redis-config.yml
 kubectl apply -f ../redis-kube/prod/deployment.yml
 kubectl apply -f ../redis-kube/prod/service.yml
 

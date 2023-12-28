@@ -21,6 +21,12 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/redis-kube
+          command:
+            - "redis-server"
+            - "--appendonly"
+            - "yes"
+            - "--requirepass"
+            - "123456"
       volumes:
         - name: config
           configMap:

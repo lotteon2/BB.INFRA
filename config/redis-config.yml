@@ -4,5 +4,6 @@ metadata:
   name: redis-config
   namespace: prod
 data:
-  redis.conf: |
-    requirepass 123456
+  redis-config: |
+    maxmemory 20mb
+    maxmemory-policy allkeys-lru
