@@ -43,6 +43,9 @@ data:
         PRIMARY KEY (`order_group_id`)
     );
 
+
+
+
     CREATE TABLE `order_pickup` (
         `order_pickup_id` VARCHAR(255) NOT NULL,
         `created_at` datetime(6) DEFAULT CURRENT_TIMESTAMP(6)  null,
@@ -85,7 +88,7 @@ data:
         PRIMARY KEY (`order_subscription_id`)
     );
 
-    create table `settlement` (
+    create table `order_settlement` (
         `settlement_id` BIGINT NOT NULL AUTO_INCREMENT,
         `created_at` datetime(6) DEFAULT CURRENT_TIMESTAMP(6)  null,
         `is_deleted` bit DEFAULT false null,
@@ -101,6 +104,8 @@ data:
         `sido` varchar(255),
         PRIMARY KEY (`settlement_id`)
     );
+
+
 
     -- 외래 키 제약 조건 설정
     ALTER TABLE `order_delivery` ADD CONSTRAINT `FK_order_group` FOREIGN KEY (`order_group_id`) REFERENCES `order_group` (`order_group_id`);
