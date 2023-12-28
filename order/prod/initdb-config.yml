@@ -97,6 +97,8 @@ data:
         `store_id` bigint,
         `store_name` varchar(255),
         `total_amount_per_month` bigint,
+        `gugun`  varchar(255),
+        `sido` varchar(255),
         PRIMARY KEY (`settlement_id`)
     );
 
