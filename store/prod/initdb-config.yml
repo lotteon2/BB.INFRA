@@ -35,7 +35,7 @@ data:
       `store_code` varchar(255) NOT NULL,
       `store_manager_id` bigint NOT NULL,
       `store_name` varchar(255) NOT NULL,
-      `monthly_sales_revenue` bigint NULL,
+      `monthly_sales_revenue` bigint NOT NULL DEFAULT '0',
       `store_thumbnail_image` varchar(255) NOT NULL,
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
