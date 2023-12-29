@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: orderquery-service
-          image: nowgnas/bb:orderquery
+          image: nowgnas/bb:order-query
           imagePullPolicy: Always
           ports:
             - containerPort: 9900
