@@ -5,6 +5,7 @@ metadata:
   namespace: prod
 data:
   initdb.sql: |
+    use store;
     CREATE TABLE `sido` (
       `code` varchar(255) NOT NULL,
       `name` varchar(255) DEFAULT NULL,
@@ -34,6 +35,7 @@ data:
       `store_code` varchar(255) NOT NULL,
       `store_manager_id` bigint NOT NULL,
       `store_name` varchar(255) NOT NULL,
+      `monthly_sales_revenue` bigint NULL,
       `store_thumbnail_image` varchar(255) NOT NULL,
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
