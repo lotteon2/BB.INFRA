@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Array of services
-services=('admin' 'apigateway' 'auth' 'delivery' 'notification' 'order' 'payment' 'product' 'store' 'user' 'wishlist')
-port=(8200 8000 9000 8300 8400 8900 8100 8800 8700 8600 8500)
+services=('admin' 'apigateway' 'auth' 'delivery' 'notification' 'order' 'payment' 'product' 'store' 'user' 'wishlist' 'orderquery' 'giftcard')
+port=(8200 8000 9000 8300 8400 8900 8100 8800 8700 8600 8500 9900 9100)
 # Iterate over each service
 for ((i=0; i<${#services[@]}; i++)); do
   service=${services[i]}
