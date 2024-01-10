@@ -13,7 +13,6 @@ data:
         created_at       DATETIME DEFAULT CURRENT_TIMESTAMP null,
         updated_at       DATETIME DEFAULT CURRENT_TIMESTAMP null,
         is_deleted bit DEFAULT false          null,
-        is_recently_out  bit DEFAULT false        not null,
         last_logout_time DATETIME DEFAULT CURRENT_TIMESTAMP null
     );
 
