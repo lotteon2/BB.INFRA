@@ -11,9 +11,8 @@ data:
         oauth_id         bigint      not null
             primary key,
         created_at       DATETIME DEFAULT CURRENT_TIMESTAMP null,
-        is_deleted       bit DEFAULT false         null,
         updated_at       DATETIME DEFAULT CURRENT_TIMESTAMP null,
-        is_recently_out  bit         not null,
+        is_recently_out  bit DEFAULT false        not null,
         last_logout_time DATETIME DEFAULT CURRENT_TIMESTAMP null
     );
 
